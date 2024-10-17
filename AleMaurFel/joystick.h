@@ -2,6 +2,7 @@ void external_clk();
 void adc_init();
 void adc_read();
 void calibration();
+void joystick_print();
 
 uint16_t adc_readgpt(uint8_t channel);
 

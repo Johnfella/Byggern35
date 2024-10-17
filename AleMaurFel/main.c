@@ -4,29 +4,24 @@
 #include "UART.h"
 #include "SRAM_test.h"
 #include "joystick.h"
+#include "OLED.h"
 
 #define BAUD 9600
 #define MYUBRR (F_CPU/16/BAUD-1)
 
-void main(void){
+void main(void) {
     USART_Init(MYUBRR);
     SRAM_init();
-    external_clk();
+   // SRAM_test();
+   //external_clk();
+   // oled_init_ports();
+    oled_init();
 
-
-    
-
-    while(1){
-        adc_read();
-        position Position = joystickPosition();
-
-    switch (Position) {
-        case LEFT: printf("\n LEFT \n"); break;
-        case RIGHT: printf("\n RIGHT \n"); break;
-        case NEUTRAL: printf("\n NEUTRAL \n"); break;
-        case UP: printf("\n UP \n"); break;
-        case DOWN: printf("\n DOWN \n"); break;
+    while (1) {    
+        write_c(0xaf); // display on
+        //_delay_ms(500);
+        write_c(0xae);
+        //_delay_ms(500);
     }
-        _delay_ms(100);
-    }
+       
 }

@@ -73,6 +73,21 @@ void adc_read(multifunctionBoard * p)
     }
 
 }
+/*
+void joystick_print() {
+    while(1){
+        adc_read();
+        position Position = joystickPosition();
+    switch (Position) {
+        case LEFT: printf("\n LEFT \n"); break;
+        case RIGHT: printf("\n RIGHT \n"); break;
+        case NEUTRAL: printf("\n NEUTRAL \n"); break;
+        case UP: printf("\n UP \n"); break;
+        case DOWN: printf("\n DOWN \n"); break;
+    }
+        _delay_ms(100);
+    }
+}*/
 
 position joystickPosition (multifunctionBoard * p) {
     uint8_t xValue = joystick.x;
@@ -108,8 +123,20 @@ position joystickPosition (multifunctionBoard * p) {
         return NEUTRAL;
     }
 }
+/*
+    while(1){
+        adc_read();
+        position Position = joystickPosition();
 
-
+    switch (Position) {
+        case LEFT: printf("\n LEFT \n"); break;
+        case RIGHT: printf("\n RIGHT \n"); break;
+        case NEUTRAL: printf("\n NEUTRAL \n"); break;
+        case UP: printf("\n UP \n"); break;
+        case DOWN: printf("\n DOWN \n"); break;
+    }
+        _delay_ms(100);
+    }*/
 
 /*void calibration(multifunctionBoard * p){R)
 
