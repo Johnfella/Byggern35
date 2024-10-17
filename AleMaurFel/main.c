@@ -11,13 +11,22 @@
 void main(void){
     USART_Init(MYUBRR);
     SRAM_init();
-    adc_init();
-    SRAM_test();
+    external_clk();
+
+
+    
 
     while(1){
-        //uint16_t x_axis = adc_read(0);
-        //uint16_t y_axis = adc_read(1);
-        //printf(x_axis);
+        adc_read();
+        position Position = joystickPosition();
+
+    switch (Position) {
+        case LEFT: printf("\n LEFT \n"); break;
+        case RIGHT: printf("\n RIGHT \n"); break;
+        case NEUTRAL: printf("\n NEUTRAL \n"); break;
+        case UP: printf("\n UP \n"); break;
+        case DOWN: printf("\n DOWN \n"); break;
+    }
         _delay_ms(100);
     }
 }
