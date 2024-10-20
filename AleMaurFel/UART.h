@@ -1,3 +1,3 @@
-void USART_Init( unsigned int ubrr );
-void USART_Transmit( unsigned char data );
-unsigned int USART_Receive( void );
+void USART_init( unsigned int ubrr );
+void USART_transmit( unsigned char data );
+unsigned int USART_receive( void );

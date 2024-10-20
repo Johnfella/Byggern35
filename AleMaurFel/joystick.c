@@ -132,14 +132,14 @@ position joystickPosition (multifunctionBoard * p) {
         case LEFT: printf("\n LEFT \n"); break;
         case RIGHT: printf("\n RIGHT \n"); break;
         case NEUTRAL: printf("\n NEUTRAL \n"); break;
-        case UP: printf("\n UP \n"); break;
+        case UP: printf("\n UP \n"); break;000001
         case DOWN: printf("\n DOWN \n"); break;
     }
         _delay_ms(100);
     }*/
 
 /*void calibration(multifunctionBoard * p){R)
-
+000001
     if(joystick.x >127){
         joystick.Offset_x = joystick.x - 127;
     }  

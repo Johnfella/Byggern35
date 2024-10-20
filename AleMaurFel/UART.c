@@ -1,15 +1,16 @@
 
+#define F_CPU 4915200
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdio.h>
 #include "UART.h"
-#define F_CPU 4915200
+
 #define BAUD 9600
 #define MYUBRR (F_CPU/16/BAUD-1)
 
 
-void USART_Init( unsigned int ubrr )
+void USART_init( unsigned int ubrr )
 {
 /* Set baud rate */
 UBRR0H = (unsigned char)(ubrr>>8);
@@ -18,11 +19,11 @@ UBRR0L = (unsigned char)ubrr;
 UCSR0B = (1<<RXEN0)|(1<<TXEN0);
 /* Set frame format: 8data, 2stop bit */
 UCSR0C = (1<<URSEL0)|(1<<USBS0)|(3<<UCSZ00);
-fdevopen(USART_Transmit, USART_Receive);
+fdevopen(USART_transmit, USART_receive);
 }    
 
 
-void USART_Transmit( unsigned char data )
+void USART_transmit( unsigned char data )
 {
 /* Wait for empty transmit buffer */
 while ( !( UCSR0A & (1<<UDRE0)) )
@@ -32,7 +33,7 @@ UDR0 = data;
 }
 
 
-unsigned int USART_Receive( void )
+unsigned int USART_receive( void )
 {
 unsigned char status, resh, resl;
 /* Wait for data to be received */

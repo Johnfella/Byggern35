@@ -10,18 +10,18 @@
 #define MYUBRR (F_CPU/16/BAUD-1)
 
 void main(void) {
-    USART_Init(MYUBRR);
+    USART_init(MYUBRR);
     SRAM_init();
-   // SRAM_test();
-   //external_clk();
-   // oled_init_ports();
+    external_clk();
     oled_init();
+    SRAM_test();
 
-    while (1) {    
-        write_c(0xaf); // display on
-        //_delay_ms(500);
-        write_c(0xae);
-        //_delay_ms(500);
+
+    while (1) { 
+        oled_reset();
+        _delay_ms(400);
+        oled_set();
+        _delay_ms(400);
     }
        
 }
