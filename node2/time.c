@@ -105,3 +105,6 @@ uint64_t ticksPerMs(void){
     return calib;
 }
 
+void delay_ms(uint64_t ms) {
+    time_spinFor(msecs(ms));
+}

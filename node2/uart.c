@@ -1,4 +1,5 @@
 #include "sam.h"
+#include "uart.h"
 #include <stdio.h>
 
 #define F_CPU 84000000
@@ -36,6 +37,7 @@ int pop(RingBuf* rb, uint8_t* val){
 }
 
 void uart_init(uint32_t cpufreq, uint32_t baudrate){
+    setvbuf(stdout, NULL, _IONBF, 0);
     PMC->PMC_PCER0 |= (1 << ID_UART);
     
     // Set UART pins (A8, A9) to use alternate function (this disables regular IO)

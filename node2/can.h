@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define txMailbox 0
+#define rxMailbox 1
+
 // Struct with bit timing information
 // See `can_init` for usage example
 typedef struct CanInit CanInit;
@@ -10,8 +13,8 @@ __attribute__((packed)) struct CanInit {
     union {
         struct {
             uint32_t phase2:4;  // Phase 2 segment
-            uint32_t propag:4;  // Propagation time segment
             uint32_t phase1:4;  // Phase 1 segment
+            uint32_t propag:4;  // Propagation time segment
             uint32_t sjw:4;     // Synchronization jump width
             uint32_t brp:8;     // Baud rate prescaler
             uint32_t smp:8;     // Sampling mode
@@ -71,7 +74,7 @@ struct Byte8 {
 //    // Should print: CanMsg(id:1, length:7, data:{10, 0, 20, 0, 0, 240, 193})
 typedef struct CanMsg CanMsg;
 struct CanMsg {
-    uint8_t id;
+    uint32_t id;
     uint8_t length;
     union {
         uint8_t     byte[8];
@@ -96,3 +99,19 @@ void can_printmsg(CanMsg m);
 
 
 
+typedef struct can_data{
+    uint8_t joystick_horizontal;
+    uint8_t joystick_vertical;
+    uint8_t slider_left;
+    uint8_t slider_right;
+    uint8_t left_button;
+    uint8_t game_status;
+    uint32_t servo;
+    uint32_t motor;
+    uint8_t solenoid;
+    uint32_t vert_map;
+    uint32_t hori_map;
+
+
+}can_data;
+void can_data_direct(can_data *data, CanMsg *new_message);

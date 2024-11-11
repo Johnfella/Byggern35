@@ -1,17 +1,19 @@
 
 #include "sam.h"
-#include "../../../lib/can/can.h"
+#include "can.h"
 #include <stdio.h>
 
 void can_printmsg(CanMsg m){
-    printf("CanMsg(id:%d, length:%d, data:{", m.id, m.length);
-    if(m.length){
-        printf("%d", m.byte[0]);
+    if (m.id == 10 || m.id == 20) {
+        printf("CanMsg(id:%d, length:%d, data:{", m.id, m.length);
+        if(m.length){
+            printf("%d", m.byte[0]);
+        }
+        for(uint8_t i = 1; i < m.length; i++){
+            printf(", %d", m.byte[i]);
+        }
+        printf("})\n");
     }
-    for(uint8_t i = 1; i < m.length; i++){
-        printf(", %d", m.byte[i]);
-    }
-    printf("})\n");
 }
 
 
@@ -108,28 +110,23 @@ uint8_t can_rx(CanMsg* m){
     return 1;
 }
     
-    
+void can_data_direct(can_data *data, CanMsg *new_message) {
+    //CanMsg new_message;
+    can_rx(new_message);
 
-    
-/*
-// Example CAN interrupt handler
-void CAN0_Handler(void){
-    char can_sr = CAN0->CAN_SR; 
-    
-    // RX interrupt
-    if(can_sr & (1 << rxMailbox)){
-        // Add your message-handling code here
-        can_printmsg(can_rx());
-    } else {
-        printf("CAN0 message arrived in non-used mailbox\n\r");
-    }
-    
-    if(can_sr & CAN_SR_MB0){
-        // Disable interrupt
-        CAN0->CAN_IDR = CAN_IER_MB0;
-    }
-    
-    NVIC_ClearPendingIRQ(ID_CAN0);
-} 
-*/
+    if (new_message->id == 20) {
+        data->joystick_horizontal = new_message->byte[0];
+        data->joystick_vertical = new_message->byte[1];
+        data->slider_left = new_message->byte[2];
+        data->slider_right = new_message->byte[3];
+        data->left_button = new_message->byte[4];
 
+        data->vert_map = mapValue(data->joystick_vertical,0,255,0,100);
+        data->hori_map = mapValue(data->joystick_vertical,0,255,0,100);
+        data->motor = mapValue(data->slider_left,0,255,900,2100);
+        data->servo = mapValue(data->slider_right,0,255,900,2100);
+
+    } else if (new_message->id == 10) {
+        data->game_status = new_message->byte[0];
+    }
+}

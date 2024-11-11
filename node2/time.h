@@ -63,3 +63,5 @@ uint64_t time_combine(Time t);
 //      // prints "t: Time(1h, 5m, 48s, 2ms, 0t)"
 #define time_fmtStr "Time(%uh, %um, %us, %ums, %ut)"
 #define time_fmtParam(t) t.hours, t.minutes, t.seconds, t.msecs, t.ticks
+
+void delay_ms(uint64_t ms);
