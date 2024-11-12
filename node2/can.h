@@ -107,10 +107,11 @@ typedef struct can_data{
     uint8_t left_button;
     uint8_t game_status;
     uint32_t servo;
-    uint32_t motor;
     uint8_t solenoid;
     uint32_t vert_map;
     uint32_t hori_map;
+    int32_t motor_position;
+    int32_t desired_motor_position;
 
 
 }can_data;

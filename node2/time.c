@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "time.h"
-
+#include "can.h"
 
 uint64_t calib;
 static uint64_t now = 0;
@@ -107,4 +107,24 @@ uint64_t ticksPerMs(void){
 
 void delay_ms(uint64_t ms) {
     time_spinFor(msecs(ms));
+}
+
+
+uint64_t count_time(can_data *m) {
+    static uint64_t start_time = 0;  // Initialize once to store the start time
+    static uint64_t elapsed_time = 0; // To store the elapsed time
+
+    if (m->game_status == 1) {
+        // If start_flag is set and start_time is zero, initialize start_time
+        if (start_time == 0) {
+            start_time = time_now();
+        }
+        // Calculate the elapsed time since start
+        elapsed_time = time_now() - start_time;
+    } else if (m->game_status == 0 && start_time != 0) {
+        // If start_flag is 0, stop counting and reset start_time
+        start_time = 0;
+    }
+
+    return elapsed_time; // Return the total elapsed time in ticks
 }

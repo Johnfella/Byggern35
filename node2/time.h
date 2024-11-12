@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "can.h"
 
 
 
@@ -16,6 +17,7 @@ uint64_t msecs(uint64_t s);
 uint64_t seconds(uint64_t s);
 uint64_t minutes(uint64_t s);
 uint64_t hours(uint64_t s);
+uint64_t count_time(can_data *m);
 
 // Convert ticks to wall time units
 float totalUsecs(uint64_t t);
