@@ -36,7 +36,10 @@ void adc_init(void) {
     clear_bit(DDRB, PB0);
     set_bit(PORTB, PB0);
     clear_bit(DDRB, PB1);
-    clear_bit(DDRB, PB2);
+    //clear_bit(DDRB, PB2);
+    set_bit(DDRB, PB3);
+    set_bit(PORTB, PB3);
+
 
     adc_read();
     adc_initted = 1;
@@ -191,6 +194,16 @@ void game_status(CAN_Message *m) {
         if (!ir_status) {
             *m->data = 0;
         }
+    }
+}
+
+void solenoid_pin() {
+    static uint8_t solenoid_pin;
+    solenoid_pin = get_button(LBUTTON);
+    if (solenoid_pin) {
+        clear_bit(PORTB, PB3);
+    } else {
+        set_bit(PORTB, PB3);
     }
 }
 

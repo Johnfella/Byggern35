@@ -269,5 +269,7 @@ void can_sensor_data (CAN_Message *message) {
     message->data[1] = joystick.x;
     message->data[2] = joystick.L;
     message->data[3] = joystick.R;
+    message->data[4] = get_button(LBUTTON);
+    message->data[5] = get_ir_status();
     can_bus_write(0, *message);
 }

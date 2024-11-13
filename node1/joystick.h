@@ -44,6 +44,7 @@ typedef enum{
 
 int get_button();
 int get_ir_status();
+void solenoid_pin();
 
 /*struct Joystick {
     enum JoystickPosition position;
