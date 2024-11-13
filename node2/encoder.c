@@ -31,12 +31,12 @@ void encoder_init(void) {
     TC2->TC_CHANNEL[0].TC_CCR = TC_CCR_CLKEN | TC_CCR_SWTRG;
 }
 
-int32_t encoder_get_pos(can_data *d) {
+int32_t encoder_get_pos(can_data d) {
     // Read the current counter value (position)
     static int32_t pos;
     pos = (int32_t)TC2->TC_CHANNEL[0].TC_CV;
 
-    d->motor_position = mapValue(pos,0,4800,0,100);
+    d.motor_position = mapValue(pos,0,4800,0,100);
     return pos;
 }
 

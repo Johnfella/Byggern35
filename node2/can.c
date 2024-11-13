@@ -13,7 +13,7 @@ void can_printmsg(CanMsg m){
         for(uint8_t i = 1; i < m.length; i++){
             printf(", %d", m.byte[i]);
         }
-        printf("})\n");
+        printf("})\r\n");
     }
 }
 
@@ -121,6 +121,7 @@ void can_data_direct(can_data *data, CanMsg *new_message) {
         data->slider_left = new_message->byte[2];
         data->slider_right = new_message->byte[3];
         data->left_button = new_message->byte[4];
+        data->ir_status = new_message->byte[5];
 
         data->vert_map = mapValue(data->joystick_vertical,0,255,0,100);
         data->hori_map = mapValue(data->joystick_horizontal,0,255,0,100);

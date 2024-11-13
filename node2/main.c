@@ -8,6 +8,7 @@
 #include "can.h"
 #include "PWM.h"
 #include "encoder.h"
+#include "motor.h"
 //#include "motor.h"
 #define BAUD 115200
 #define CAN_BIT_RATE 250000
@@ -30,30 +31,30 @@ int main()
         .smp = 0
     };
     can_init(initConfig, 0);
-    pwm_clocks_init();
-    setup_pwm_servo();
+   // pwm_clocks_init();
+    servo_init();
     encoder_init();
     motor_init();
-
+    solenoid_init();
 
     CanMsg receivedMsg;
     can_data data;
     uint64_t counted_time = count_time(&data);
     uint32_t encoder_pos;
-    
+
     while (1)
     {   
-        motor_set_speed(50);
-        motor_set_direction(1);
+        motor_set_speed(100);
+        motor_set_direction(0);
         can_data_direct(&data, &receivedMsg);
-        encoder_pos = encoder_get_pos(&data);
-        //printf("Current position: %d\r\n",encoder_pos);
+        solenoid_control(data);
+        encoder_pos = encoder_get_pos(data);
+        printf("ENCODER POSITION: %d\r\n", encoder_pos);
+        //solenoid_pin(&data);
+        //printf("Current position: %d\r\n",data.joystick_horizontal);
         set_servo_position(data.servo);
-        printf("joystick vertical mapped: %d  |  Joysitck horizontal mapped: %d\r\n", data.motor_position);
+        //printf("joystick vertical mapped: %d  |  Joysitck horizontal mapped: %d\r\n", data.hori_map, data.servo);
         //can_printmsg(receivedMsg);
-        //ata.game_status = 1;
-        //counted_time = count_time(&data);
-        //printf("%d\n", totalSeconds(counted_time));
     }
 
                     

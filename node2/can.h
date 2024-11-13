@@ -112,6 +112,7 @@ typedef struct can_data{
     uint32_t hori_map;
     int32_t motor_position;
     int32_t desired_motor_position;
+    uint8_t ir_status;
 
 
 }can_data;

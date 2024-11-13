@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "PWM.h"
 #include "uart.h"
+#define SOLENOID_PIN PIO_PA8
 
 void pwm_clocks_init(void) {
     // Configure PWM_CLK register only once to avoid interference
@@ -14,7 +15,7 @@ void pwm_clocks_init(void) {
 }
 
 
-void setup_pwm_servo() {
+void servo_init() {
     // Enable the PWM peripheral clock
     PMC->PMC_PCER1 |= (1 << (ID_PWM - 32));  // Enable the clock for the PWM controller
     
@@ -30,16 +31,20 @@ void setup_pwm_servo() {
     //PWM->PWM_CLK = PWM_CLK_PREA(0) | PWM_CLK_DIVA(84);  // Set prescaler A to 42 (1 MHz PWM clock)
 
     // Configure PWM Channel 1 for 50 Hz frequency (20 ms period)
+    PWM->PWM_CLK = PWM_CLK_PREA(0) | PWM_CLK_DIVA(84);
     PWM->PWM_CH_NUM[1].PWM_CMR = PWM_CMR_CPRE_CLKA;     // Use Clock A as the source for Channel 1
     PWM->PWM_CH_NUM[1].PWM_CPRD = 20000;                // Set period to 20000 (20 ms at 1 MHz)
     PWM->PWM_CH_NUM[1].PWM_CMR &= ~(1<<8);
     PWM->PWM_CH_NUM[1].PWM_CMR |= PWM_CMR_CPOL;
+
+    
 
     // Set an initial duty cycle (e.g., midpoint for servo at 1.5 ms)
     PWM->PWM_CH_NUM[1].PWM_CDTY = 1500;                 // 1.5 ms pulse width
 
     // Enable the PWM channel
     PWM->PWM_ENA = PWM_ENA_CHID1;                       // Enable PWM Channel 1
+    //PIOD->PIO_OER |= SOLENOID_PIN;
 }
 
 void set_servo_position(uint16_t pulse_width) {
@@ -73,7 +78,22 @@ int32_t mapValue(int32_t value, int32_t low, int32_t high, int32_t min, int32_t 
     return (int32_t)mapped_value;
 }
 
+#define SOLENOID_PIN PIO_PB25
 
+void solenoid_init() {
+    PMC->PMC_PCER0 |= (1 << ID_PIOB);
+
+    PIOB->PIO_PER = SOLENOID_PIN;    // Enable PIO control on PB25
+    PIOB->PIO_OER = SOLENOID_PIN;    // Set PB25 as output
+}
+
+void solenoid_control(can_data d) {
+    if (d.left_button) {
+        PIOB->PIO_CODR = SOLENOID_PIN;
+    } else {
+        PIOB->PIO_SODR = SOLENOID_PIN;
+    }
+}
 
 /*
 // insert in main
