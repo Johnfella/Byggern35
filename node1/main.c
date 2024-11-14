@@ -61,27 +61,13 @@ void main(void) {
         .length = 1
     };
     uint8_t ir_status;
-    CAN_Message can_ir = {
-        .id = 20,
-        .length = 6,
-        .data[5] = ir_status
-    };
 
     CAN_Message received_msg;
     
     while (1) {
-        //adc_read();
-        //printf("%x\r\n", joystickPosition);
-        //sensor_data.id = 0x280;
         
-        //printf("%x\r\n",message->data[0]);
-        //printf("Current breakline: %d\r\n", ir_status);
-        //can_bus_write(0, sensor_data);
-        //can_read_print(&received_msg);
-        solenoid_pin();
         can_sensor_data(&sensor_data);
         
-        _delay_ms(10);
         
     }
 }

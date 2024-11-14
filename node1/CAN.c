@@ -6,6 +6,7 @@
 #include"CAN.h"
 #include"mcp2515.h"
 #include "joystick.h"
+#include "macros.h"
 
 
 void mcp_reset() {
@@ -269,7 +270,7 @@ void can_sensor_data (CAN_Message *message) {
     message->data[1] = joystick.x;
     message->data[2] = joystick.L;
     message->data[3] = joystick.R;
-    message->data[4] = get_button(LBUTTON);
-    message->data[5] = get_ir_status();
+    message->data[4] = test_bit(PINB, PINB0);
+    message->data[5] = test_bit(PINB, PINB1);
     can_bus_write(0, *message);
 }
