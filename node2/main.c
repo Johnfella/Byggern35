@@ -14,6 +14,7 @@
 #define CAN_BIT_RATE 250000
 #define TQ_TOTAL 1/CAN_BIT_RATE
 #define TQ TQ_TOTAL/16
+#define MOTOR_DIR_PIN       PIO_PC23 
 
 
 int main()
@@ -42,19 +43,21 @@ int main()
     uint64_t counted_time = count_time(&data);
     uint32_t encoder_pos;
 
+    
+
+
     while (1)
     {   
-        motor_set_speed(100);
-        motor_set_direction(0);
         can_data_direct(&data, &receivedMsg);
-        solenoid_control(data);
-        encoder_pos = encoder_get_pos(data);
-        printf("ENCODER POSITION: %d\r\n", encoder_pos);
-        //solenoid_pin(&data);
-        //printf("Current position: %d\r\n",data.joystick_horizontal);
-        set_servo_position(data.servo);
-        //printf("joystick vertical mapped: %d  |  Joysitck horizontal mapped: %d\r\n", data.hori_map, data.servo);
-        //can_printmsg(receivedMsg);
+        actuators(data);
+        //data.motor_position = mapValue(encoder_get_pos(data),0,5500,0,255);
+        //data.motor_position = mapValue(encoder_pos,0,5500,0,255);
+        //motor_controller(&data);
+        //motor_set_direction(1);
+        //motor_set_speed(50);
+        //printf("ENCODER POSITION: %d\r\n", data.servo);
+        //printf("Desired position: %d  |  Current position: %d\r\n", data.desired_motor_position, data.motor_position);
+        can_printmsg(receivedMsg);
     }
 
                     

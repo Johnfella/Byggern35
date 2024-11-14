@@ -118,14 +118,14 @@ void can_data_direct(can_data *data, CanMsg *new_message) {
     if (new_message->id == 20) {
         data->joystick_vertical = new_message->byte[0];
         data->joystick_horizontal = new_message->byte[1];
-        data->slider_left = new_message->byte[2];
-        data->slider_right = new_message->byte[3];
+        data->slider_right = new_message->byte[2];
+        data->slider_left = new_message->byte[3];
         data->left_button = new_message->byte[4];
         data->ir_status = new_message->byte[5];
 
         data->vert_map = mapValue(data->joystick_vertical,0,255,0,100);
         data->hori_map = mapValue(data->joystick_horizontal,0,255,0,100);
-        data->desired_motor_position = mapValue(data->joystick_horizontal,0,255,0,100);
+        data->desired_motor_position = mapValue(data->slider_right,0,255,0,255);
         data->servo = mapValue(data->joystick_horizontal,0,255,900,2100);
 
     } else if (new_message->id == 10) {

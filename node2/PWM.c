@@ -88,11 +88,24 @@ void solenoid_init() {
 }
 
 void solenoid_control(can_data d) {
+    /*
     if (d.left_button) {
         PIOB->PIO_CODR = SOLENOID_PIN;
     } else {
         PIOB->PIO_SODR = SOLENOID_PIN;
+    }*/
+
+    if (d.vert_map > 75) {
+        PIOB->PIO_CODR = SOLENOID_PIN;
+    } else {
+        PIOB->PIO_SODR = SOLENOID_PIN;
     }
+}
+
+void actuators(can_data d) {
+    solenoid_control(d);
+    set_servo_position(d.servo);
+    motor_controller(&d);
 }
 
 /*

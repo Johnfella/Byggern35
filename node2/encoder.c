@@ -36,7 +36,7 @@ int32_t encoder_get_pos(can_data d) {
     static int32_t pos;
     pos = (int32_t)TC2->TC_CHANNEL[0].TC_CV;
 
-    d.motor_position = mapValue(pos,0,4800,0,100);
+    d.motor_position = mapValue(pos,0,4800,0,255);
     return pos;
 }
 

@@ -1,5 +1,6 @@
 #include "sam.h"
 #include <stdint.h> 
+#include <stdlib.h>
 #include "motor.h"
 
 #define MOTOR_ENABLE_PIN    PIO_PB12      // PWM pin for speed control
@@ -32,7 +33,19 @@ void motor_init(void) {
     PWM->PWM_CH_NUM[MOTOR_CHANNEL].PWM_CMR &= ~(1<<8);
     PWM->PWM_CH_NUM[MOTOR_CHANNEL].PWM_CMR |= PWM_CMR_CPOL;
 
-    PWM->PWM_CH_NUM[MOTOR_CHANNEL].PWM_CDTY = 0;                       // Start with 0% duty cycle (motor off)
+    PWM->PWM_CH_NUM[MOTOR_CHANNEL].PWM_CDTY = 5;                       // Start with 0% duty cycle (motor off)
+
+    //Move motor all the way to the side and reset encoder
+    motor_set_direction(1);
+    motor_set_speed(40);
+    delay_ms(1000);
+    motor_stop();
+    encoder_reset();
+    motor_set_speed(30);
+    motor_set_direction(0);
+    delay_ms(100);
+    motor_stop();
+
     
     // Enable the PWM channel
     PWM->PWM_ENA = PWM_ENA_CHID0;    
@@ -46,7 +59,7 @@ void motor_set_speed(uint8_t speed) {
 }
 
 void motor_set_direction(uint8_t direction) {
-    // Set the motor direction
+    //DIRECTION RIGHT == 0 | DIRECTION LEFT == 1
     if (direction) {
         PIOC->PIO_SODR = MOTOR_DIR_PIN;  // Set direction pin high
     } else {
@@ -57,4 +70,31 @@ void motor_set_direction(uint8_t direction) {
 void motor_stop(void) {
     // Stop the motor by setting speed to 0
     motor_set_speed(0);
+}
+
+
+void motor_controller(can_data *d) {
+    static int32_t error;
+    static uint8_t Kp = 2;
+    static float Ki = 2;
+    static uint32_t duty;
+    static float integral = 0;
+    static uint8_t motor_direction;
+    static float T=0.0001;
+    d->motor_position = mapValue(encoder_get_pos(*d),0,4800,0,255);
+    error = d->desired_motor_position - d->motor_position;
+
+    //DIRECTION RIGHT == 0 | DIRECTION LEFT == 1
+    integral = integral + error*Ki*T;
+    duty = mapValue(abs(Kp*error + integral),0,255,0,100);
+    if (error < 0) {
+        d->motor_direction = 1;
+    } else {
+        d->motor_direction = 0;
+        
+    }
+    motor_set_direction(d->motor_direction);
+    //printf("motor direction: %d\r\n", d->motor_direction);
+    motor_set_speed(duty);
+    delay_ms(0.1);
 }

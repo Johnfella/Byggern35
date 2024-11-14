@@ -113,6 +113,7 @@ typedef struct can_data{
     int32_t motor_position;
     int32_t desired_motor_position;
     uint8_t ir_status;
+    uint8_t motor_direction;
 
 
 }can_data;
